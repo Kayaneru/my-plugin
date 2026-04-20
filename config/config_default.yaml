@@ -1,0 +1,44 @@
+AIchat:
+  apiKey: ""
+  baseUrl: "https://api.moonshot.cn/v1"
+  model: "moonshot-v1-8k"
+  allowPrivate: true
+  enableSearch: true
+  showThinking: true
+  groupMerge: false
+  triggerMode: "both"
+  personaPrompt: "你是一个友好的AI助手，可以分析图片并回答问题。请简洁回答。"
+
+tts:
+  enable: false
+  mode: "vits"
+  ttsSpace: ""
+  vitsDefaultSpeaker: "随机"
+  userRoleEnabled: true
+  azureKey: ""
+  azureRegion: ""
+  azureSpeaker: "zh-CN-XiaochenNeural"
+  alsoSendText: false
+  autoFallbackThreshold: 300
+
+bym:
+  enable: false
+  bymRate: 5
+  enableSearch: true
+  hit:
+    - "在吗"
+    - "你好"
+    - "早"
+    - "晚安"
+  systemPrompt: "你正在群里自然聊天。回复要像真人，简短、口语化，不要自称AI，不要解释规则。"
+  maxTokens: 512
+  fuckList:
+    - "骂"
+    - "你妈"
+    - "他妈"
+    - "尼玛"
+    - "艹"
+  fuckPrompt: "你的性格暴躁，乖张，戾气特别重，睚眦必报，别人与你几乎不能沟通，你喜欢用各种国骂和祖安语录骂回去，骂人花样不重复。"
+  fuckRecall: true
+  whitelistGroups: []
+  disableGroups: []

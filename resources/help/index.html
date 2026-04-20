@@ -1,0 +1,30 @@
+{{extend defaultLayout}}
+
+{{block 'css'}}
+<link rel="stylesheet" type="text/css" href="{{_res_path}}/help/index.css"/>
+{{/block}}
+
+{{block 'main'}}
+<div class="head-box">
+  <div class="id-text">{{helpCfg.title || "AIchat"}}</div>
+  <h2 class="day-text">{{helpCfg.subTitle || "使用说明"}}</h2>
+  <div class="head-mark">AI</div>
+</div>
+
+{{each helpGroup group}}
+<div class="data-box">
+  <div class="tab-label">{{group.group}}</div>
+  <div class="list">
+    {{each group.list item}}
+    <div class="item">
+      <div class="icon-badge">{{item.icon || "•"}}</div>
+      <div class="title">
+        <div class="text">{{item.title}}</div>
+        <div class="desc">{{item.desc}}</div>
+      </div>
+    </div>
+    {{/each}}
+  </div>
+</div>
+{{/each}}
+{{/block}}
