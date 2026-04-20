@@ -228,29 +228,46 @@ export function supportGuoba() {
         },
         {
           field: "bym.whitelistGroups",
-          label: "白名单群(逗号分隔)",
-          component: "InputTextArea",
+          label: "白名单群",
+          bottomHelpMessage: "仅这些群可触发伪人；配置后禁用群不再生效",
+          component: "GTags",
           componentProps: {
-            rows: 2,
-            placeholder: "仅这些群可触发伪人；配置后禁用群不再生效"
+            placeholder: "请输入群号",
+            allowAdd: true,
+            allowDel: true,
+            valueParser: (value) => String(value || '').split(/[，,\n]/).map(v => v.trim()).filter(Boolean)
           }
         },
         {
           field: "bym.disableGroups",
-          label: "禁用群(逗号分隔)",
-          component: "InputTextArea",
+          label: "禁用群",
+          bottomHelpMessage: "设置在该群禁用伪人模式",
+          component: "GTags",
           componentProps: {
-            rows: 2,
-            placeholder: "填写群号，多个用逗号分隔"
+            placeholder: "请输入群号",
+            allowAdd: true,
+            allowDel: true,
+            valueParser: (value) => String(value || '').split(/[，,\n]/).map(v => v.trim()).filter(Boolean)
           }
         },
         {
           field: "bym.hit",
           label: "关键词必中",
-          component: "InputTextArea",
+          bottomHelpMessage: "命中这些关键词时，伪人模式概率按 100% 处理",
+          component: "GTags",
           componentProps: {
-            rows: 2,
-            placeholder: "多个关键词用逗号分隔，例如：在吗,你好,早,晚安"
+            placeholder: "请输入关键词",
+            allowAdd: true,
+            allowDel: true,
+            showPrompt: true,
+            promptProps: {
+              content: "添加新的必中关键词",
+              okText: "添加",
+              rules: [
+                { required: true, message: "关键词不能为空" }
+              ]
+            },
+            valueParser: (value) => String(value || '').split(/[，,\n]/).map(v => v.trim()).filter(Boolean)
           }
         },
         {
@@ -264,11 +281,22 @@ export function supportGuoba() {
         },
         {
           field: "bym.fuckList",
-          label: "骂人触发词(逗号分隔)",
-          component: "InputTextArea",
+          label: "骂人触发词",
+          bottomHelpMessage: "请输入用于伪人模式下骂人反击的触发词，每个词将被单独处理",
+          component: "GTags",
           componentProps: {
-            rows: 2,
-            placeholder: "含这些词时切换暴躁模式"
+            placeholder: "请输入触发词",
+            allowAdd: true,
+            allowDel: true,
+            showPrompt: true,
+            promptProps: {
+              content: "添加新的触发词",
+              okText: "添加",
+              rules: [
+                { required: true, message: "触发词不能为空" }
+              ]
+            },
+            valueParser: (value) => String(value || '').split(/[，,\n]/).map(v => v.trim()).filter(Boolean)
           }
         },
         {

@@ -422,13 +422,15 @@ export class chat extends plugin {
     const fuck = msg ? bymCfg.fuckList.some(keyword => msg.includes(keyword)) : false
     logger.info(`[AIchat] 伪人模式触发 - msg:'${msg}' fuckList:[${bymCfg.fuckList.join(',')}] fuck:${fuck}`)
 
-    // 触发概率（百分比整数）
-    let rate = bymCfg.bymRate
-    if (msg && bymCfg.hit.some(keyword => msg.includes(keyword))) {
-      rate = 100
-    }
-    if (Math.floor(Math.random() * 100) >= rate) {
-      return false
+    // 触发概率（百分比整数）：命中骂人关键词时不受伪人概率控制，直接触发
+    if (!fuck) {
+      let rate = bymCfg.bymRate
+      if (msg && bymCfg.hit.some(keyword => msg.includes(keyword))) {
+        rate = 100
+      }
+      if (Math.floor(Math.random() * 100) >= rate) {
+        return false
+      }
     }
 
   // 构建系统提示词：骂人模式使用骂人提示词，否则使用伪人提示词
