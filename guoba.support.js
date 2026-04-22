@@ -4,7 +4,33 @@ import path from "path";
 import { pluginRoot } from "./model/path.js";
 import { VITS_SPEAKERS } from "./utils/VitsSpeakers.js";
 
+function getJoinedGroupOptions() {
+  const options = []
+  const groupMap = globalThis.Bot?.gl
+
+  if (!groupMap || typeof groupMap.forEach !== 'function') {
+    return options
+  }
+
+  groupMap.forEach((group, groupId) => {
+    const id = String(group?.group_id || groupId || '').trim()
+    if (!id) {
+      return
+    }
+    const name = String(group?.group_name || group?.name || id).trim()
+    options.push({
+      label: `${name}(${id})`,
+      value: id
+    })
+  })
+
+  options.sort((a, b) => a.label.localeCompare(b.label, 'zh-CN'))
+  return options
+}
+
 export function supportGuoba() {
+  const joinedGroupOptions = getJoinedGroupOptions()
+
   return {
     pluginInfo: {
       name: 'my-plugin',
@@ -230,24 +256,24 @@ export function supportGuoba() {
           field: "bym.whitelistGroups",
           label: "白名单群",
           bottomHelpMessage: "仅这些群可触发伪人；配置后禁用群不再生效",
-          component: "GTags",
+          component: "Select",
           componentProps: {
-            placeholder: "请输入群号",
-            allowAdd: true,
-            allowDel: true,
-            valueParser: (value) => String(value || '').split(/[，,\n]/).map(v => v.trim()).filter(Boolean)
+            mode: "multiple",
+            showSearch: true,
+            options: joinedGroupOptions,
+            placeholder: joinedGroupOptions.length > 0 ? "请选择已加入的群聊" : "暂无可选群聊，请确认机器人已入群"
           }
         },
         {
           field: "bym.disableGroups",
           label: "禁用群",
           bottomHelpMessage: "设置在该群禁用伪人模式",
-          component: "GTags",
+          component: "Select",
           componentProps: {
-            placeholder: "请输入群号",
-            allowAdd: true,
-            allowDel: true,
-            valueParser: (value) => String(value || '').split(/[，,\n]/).map(v => v.trim()).filter(Boolean)
+            mode: "multiple",
+            showSearch: true,
+            options: joinedGroupOptions,
+            placeholder: joinedGroupOptions.length > 0 ? "请选择已加入的群聊" : "暂无可选群聊，请确认机器人已入群"
           }
         },
         {
@@ -335,6 +361,13 @@ export function supportGuoba() {
       setConfigData(data, { Result }) {
         let config = {}
         for (let [keyPath, value] of Object.entries(data)) {
+          if (["bym.whitelistGroups", "bym.disableGroups"].includes(keyPath)) {
+            if (Array.isArray(value)) {
+              value = value.map(v => String(v || '').trim()).filter(Boolean)
+            } else {
+              value = String(value || '').split(/[，,\n]/).map(v => v.trim()).filter(Boolean)
+            }
+          }
           lodash.set(config, keyPath, value)
         }
         config = lodash.merge({}, Config.getConfig(), config)

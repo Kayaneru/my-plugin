@@ -420,7 +420,6 @@ export class chat extends plugin {
 
     // 骂人反击检查（仅对文字消息生效）
     const fuck = msg ? bymCfg.fuckList.some(keyword => msg.includes(keyword)) : false
-    logger.info(`[AIchat] 伪人模式触发 - msg:'${msg}' fuckList:[${bymCfg.fuckList.join(',')}] fuck:${fuck}`)
 
     // 触发概率（百分比整数）：命中骂人关键词时不受伪人概率控制，直接触发
     if (!fuck) {
@@ -478,6 +477,7 @@ export class chat extends plugin {
         { role: 'user', content }
       ]
       const response = await AIchat.chat(messages, { max_tokens: bymCfg.maxTokens })
+      logger.info(`[AIchat] 伪人模式已收到API回复，长度: ${String(response || '').length} 字符`)
       if (!response) {
         return false
       }
@@ -609,6 +609,7 @@ export class chat extends plugin {
       messages.push({ role: 'user', content })
 
       const response = await AIchat.chat(messages)
+      logger.info(`[AIchat] 正常模式已收到API回复，长度: ${String(response || '').length} 字符`)
       
       // 保存到历史
       this.saveHistory('user', content, cfg)

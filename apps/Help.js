@@ -45,12 +45,12 @@ export class help extends plugin {
                 "list": [
                     {
                         "icon": 2,
-                        "title": "AIchat <内容>",
-                        "desc": "与 AIchat 对话（支持艾特触发）"
+                        "title": "@我+聊天内容",
+                        "desc": "与机器人聊天"
                     },
                     {
                         "icon": 3,
-                        "title": "AIchat(设置)语音角色 <角色名>",
+                        "title": "AIchat(设置)语音角色+角色名",
                         "desc": "设置个人语音角色"
                     },
                     {
