@@ -32,22 +32,32 @@ export class chat extends plugin {
           log: false
         },
         {
-          reg: '^#?(?:AIchat|aichat)\\s*$',
+          reg: '^#?[Aa][Ii][Cc][Hh][Aa][Tt]\\s*$',
           fnc: 'chat',
           desc: 'AIchat对话（无文字则仅发送图片）'
         },
         {
-          reg: '^#?(?:AIchat|aichat)(?:查看)?语音角色列表$',
+          reg: '^#?[Aa][Ii][Cc][Hh][Aa][Tt](?:查看)?语音角色列表$',
           fnc: 'ttsRoleList',
           desc: '查看VITS语音角色列表'
         },
         {
-          reg: '^#?(?:AIchat|aichat)(?:设置)?语音角色\s*(.*)$',
+          reg: '^#?[Aa][Ii][Cc][Hh][Aa][Tt](?:设置)?语音角色\\s*(.*)$',
           fnc: 'setUserTTSRole',
           desc: '设置个人语音角色'
         },
         {
-          reg: '^#?(?:AIchat|aichat)\\s+(.+)$',
+          reg: '^#?[Aa][Ii][Cc][Hh][Aa][Tt](?:设置)?全局语音角色\\s*(.*)$',
+          fnc: 'setGlobalTTSRole',
+          desc: '设置全局VITS语音角色'
+        },
+        {
+          reg: '^#?[Aa][Ii][Cc][Hh][Aa][Tt]触发方式(?:\\s*(指令|艾特|全部))?$',
+          fnc: 'setTriggerMode',
+          desc: '设置AIchat触发方式'
+        },
+        {
+          reg: '^#?[Aa][Ii][Cc][Hh][Aa][Tt]\\s+(.+)$',
           fnc: 'chat'
         }
       ]
@@ -125,7 +135,7 @@ export class chat extends plugin {
   async setTriggerMode() {
     const cfg = await this.getConfig()
     const AIchatCfg = this.getAIchatConfig(cfg)
-    const match = this.e.msg.match(/^#?(?:AIchat|aichat)触发方式(?:\s*(指令|艾特|全部))?$/)
+    const match = this.e.msg.match(/^#?[Aa][Ii][Cc][Hh][Aa][Tt]触发方式(?:\s*(指令|艾特|全部))?$/)
     const modeText = match?.[1]
     if (!modeText) {
       const map = { prefix: '指令', at: '艾特', both: '全部' }
@@ -278,7 +288,7 @@ export class chat extends plugin {
   async setGlobalTTSRole() {
     const cfg = await this.getConfig()
     const ttsCfg = this.getTTSConfig(cfg)
-    const speaker = this.normalizeSpeakerName(this.e.msg.replace(/^#?(?:AIchat|aichat)全局语音角色\s*/, ''))
+    const speaker = this.normalizeSpeakerName(this.e.msg.replace(/^#?[Aa][Ii][Cc][Hh][Aa][Tt](?:设置)?全局语音角色\s*/, ''))
     if (speaker !== '随机' && !ttsCfg.vitsSpeakers.includes(speaker)) {
       return this.reply('设置失败：该角色不在可选列表中，请使用 #AIchat语音角色列表 查看')
     }
@@ -297,7 +307,7 @@ export class chat extends plugin {
     if (!ttsCfg.userRoleEnabled) {
       return this.reply('管理员已关闭个人语音角色配置')
     }
-    const speaker = this.normalizeSpeakerName(this.e.msg.replace(/^#?(?:AIchat|aichat)(?:设置)?语音角色\s*/, ''))
+    const speaker = this.normalizeSpeakerName(this.e.msg.replace(/^#?[Aa][Ii][Cc][Hh][Aa][Tt](?:设置)?语音角色\s*/, ''))
     if (speaker !== '随机' && !ttsCfg.vitsSpeakers.includes(speaker)) {
       return this.reply('设置失败：该角色不在可选列表中，请使用 #AIchat语音角色列表 查看')
     }
@@ -384,7 +394,7 @@ export class chat extends plugin {
   async bym() {
     const msg = (this.e.msg || '').trim()
     const images = this.e.img
-    const isAIchatCommand = /^#?(?:AIchat|aichat)/.test(msg)
+    const isAIchatCommand = /^#?[Aa][Ii][Cc][Hh][Aa][Tt]/.test(msg)
     // 无文字且无图片，或以#开头的命令，跳过
     if ((!msg && !images) || msg.startsWith('#') || isAIchatCommand) {
       return false
@@ -536,12 +546,12 @@ export class chat extends plugin {
       return this.reply('当前已关闭私聊使用（主人不受限制）')
     }
     const AIchatCfg = this.getAIchatConfig(cfg)
-    const isPrefixTrigger = /^#?(?:AIchat|aichat)/.test(raw)
+    const isPrefixTrigger = /^#?[Aa][Ii][Cc][Hh][Aa][Tt]/.test(raw)
     const isAtTrigger = !isPrefixTrigger && this.isAtBot()
     if (isPrefixTrigger && !['prefix', 'both'].includes(AIchatCfg.triggerMode)) {
       return this.reply('当前未开启指令触发，请使用艾特机器人触发，或让主人执行：#AIchat触发方式 全部')
     }
-    const msg = raw.replace(/^#?(?:AIchat|aichat)/, '').trim()
+    const msg = raw.replace(/^#?[Aa][Ii][Cc][Hh][Aa][Tt]/, '').trim()
     
     // 获取图片
     const images = this.e.img

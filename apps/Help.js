@@ -11,7 +11,7 @@ export class help extends plugin {
             priority: 1009,
             rule: [
                 {
-                    reg: '^(/|#)?AIchat帮助$',
+                    reg: '^(/|#)?[Aa][Ii][Cc][Hh][Aa][Tt]帮助$',
                     fnc: 'help'
                 }
             ]
